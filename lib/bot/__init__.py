@@ -7,7 +7,7 @@ from ..db import db
 from glob import glob
 
 
-PREFIX = "+"
+PREFIX = "!"
 OWNER_IDS = [166164713653272578]
 COGS = [path.split("\\")[-1][:-3] for path in glob("./lib/cogs/*.py")]
 
@@ -81,7 +81,8 @@ class Bot(BotBase):
             print("bot reconnected")
 
     async def on_message(self, message):
-        pass
+        if not message.author.bot:
+            await self.process_commands(message)
 
 
 bot = Bot()
