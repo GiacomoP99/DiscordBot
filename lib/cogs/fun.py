@@ -4,15 +4,7 @@ from random import randint
 from discord.utils import get
 from discord import Embed
 from discord import File
-import requests
 from imgurpython import ImgurClient
-import configparser
-
-# config = configparser.ConfigParser()
-# config.read('auth.ini')
-# client_id = config.get('credentials', 'client_id')
-# client_secret = config.get('credentials', 'client_secret')
-# client = ImgurClient(client_id, client_secret)
 
 
 class Fun(Cog):
@@ -31,13 +23,54 @@ class Fun(Cog):
 
     @command(name="newbt")
     async def add_new_bt(self, ctx):
-        content = ctx.message.content.replace("!newbt", "").split(" ")
+        content = ctx.message.content.replace("!newbt ", "").split(" ")
         await ctx.message.delete()
         embed = Embed(title="NUOVA BOUNTY TRIALS",
-                      description=f"bounty trials di {content[1]}", colour=0xFF0000)
+                      description=f"bounty trials di {content[0]}", colour=0xFF0000)
         embed.set_image(
-            url=str(content[2]))
+            url=str(content[1]))
         await ctx.send(embed=embed)
+
+    @command(name="newv")
+    async def add_new_voyage(self, ctx):
+        content = ctx.message.content.replace("!newv ", "").split(" ")
+        await ctx.message.delete()
+        embed = Embed(title="NUOVA VIAGGIO DELLE MERAVIGLIE", colour=0xFF0000)
+        embed.set_image(
+            url=str(content[0]))
+        await ctx.send(embed=embed)
+
+    @command(name="newpatch")
+    async def add_new_patch(self, ctx):
+        content = ctx.message.content.replace("!newpatch ", "").split(" ")
+        await ctx.message.delete()
+        embed = Embed(title="NUOVA PATCH " + f"{content[0]}", colour=0xFF0000)
+        content.pop(0)
+        embed.set_image(
+            url=str(content[0]))
+        content.pop(0)
+        await ctx.send(embed=embed)
+        for link in content:
+            embed = Embed(colour=0xFF0000)
+            embed.set_image(
+                url=str(link))
+            await ctx.send(embed=embed)
+
+    @command(name="newhero")
+    async def add_new_patch(self, ctx):
+        content = ctx.message.content.replace("!newhero ", "").split(" ")
+        await ctx.message.delete()
+        embed = Embed(title="NUOVO EROE " + f"{content[0]}", colour=0xFF0000)
+        content.pop(0)
+        embed.set_image(
+            url=str(content[0]))
+        content.pop(0)
+        await ctx.send(embed=embed)
+        for link in content:
+            embed = Embed(colour=0xFF0000)
+            embed.set_image(
+                url=str(link))
+            await ctx.send(embed=embed)
 
     @Cog.listener()
     async def on_ready(self):
