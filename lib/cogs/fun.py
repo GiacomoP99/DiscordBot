@@ -31,11 +31,37 @@ class Fun(Cog):
             url=str(content[1]))
         await ctx.send(embed=embed)
 
+    @command(name="beer")
+    async def cheers(self, ctx):
+        content = ctx.message.content.replace("!beer ", "").split(" ")
+        sender = ctx.message.author
+        embed = Embed(
+            title=f"{sender} e {content[0]} brindano con una bella birra!")
+        embed.set_image(
+            url="https://media.giphy.com/media/Ig3XsprShY8TGoutIE/giphy.gif")
+        await ctx.send(embed=embed)
+
+    @command(name="pain")
+    async def pain_meme(self, ctx):
+        embed = Embed()
+        embed.set_image(
+            url="https://i.postimg.cc/vB06NktY/vayc9gwh93051.jpg")
+        await ctx.send(embed=embed)
+
     @command(name="newv")
     async def add_new_voyage(self, ctx):
         content = ctx.message.content.replace("!newv ", "").split(" ")
         await ctx.message.delete()
         embed = Embed(title="NUOVA VIAGGIO DELLE MERAVIGLIE", colour=0xFF0000)
+        embed.set_image(
+            url=str(content[0]))
+        await ctx.send(embed=embed)
+
+    @command(name="newm")
+    async def add_new_mongolfiera(self, ctx):
+        content = ctx.message.content.replace("!newm ", "").split(" ")
+        await ctx.message.delete()
+        embed = Embed(title="NUOVA MONGOLFIERA ITINERANTE", colour=0xFF0000)
         embed.set_image(
             url=str(content[0]))
         await ctx.send(embed=embed)
@@ -57,7 +83,7 @@ class Fun(Cog):
             await ctx.send(embed=embed)
 
     @command(name="newhero")
-    async def add_new_patch(self, ctx):
+    async def add_new_hero(self, ctx):
         content = ctx.message.content.replace("!newhero ", "").split(" ")
         await ctx.message.delete()
         embed = Embed(title="NUOVO EROE " + f"{content[0]}", colour=0xFF0000)
@@ -71,6 +97,21 @@ class Fun(Cog):
             embed.set_image(
                 url=str(link))
             await ctx.send(embed=embed)
+
+    @command(name="newhspo")
+    async def add_new_spoiler(self, ctx):
+        content = ctx.message.content.replace("!newhspo ", "").split(" ")
+        await ctx.message.delete()
+        url = content[len(content) - 1]
+        content.pop(len(content) - 1)
+        title = content[0]
+        content.pop(0)
+        embed = Embed(title="NUOVO EROE " +
+                      f"{title}", description=' '.join([str(elem) for elem in content]), colour=0xFF0000)
+        embed.set_image(
+            url=str(url))
+        content.pop(0)
+        await ctx.send(embed=embed)
 
     @Cog.listener()
     async def on_ready(self):
