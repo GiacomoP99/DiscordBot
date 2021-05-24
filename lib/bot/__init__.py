@@ -1,3 +1,4 @@
+from apscheduler.triggers.cron import CronTrigger
 from discord.ext.commands import Bot as BotBase
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from discord import Intents
@@ -18,6 +19,7 @@ class Bot(BotBase):
         self.guild = None
         self.scheduler = AsyncIOScheduler()
         self.ready = False
+        #self.TeamList = self.getdata()
         db.autosave(self.scheduler)
         super().__init__(command_prefix=PREFIX, owner_ids=OWNER_IDS, intents=Intents.all())
 
@@ -28,15 +30,47 @@ class Bot(BotBase):
 
         print("setup complete")
 
+    def get_teamlist(self):
+        return self.TeamList
+
     def run(self, version):
         self.VERSION = version
         print("running setup...")
         self.setup()
-
         with open("./lib/bot/token.0", "r", encoding="utf-8") as tf:
             self.TOKEN = tf.read()
+
         print("running bot...")
         super().run(self.TOKEN, reconnect=True)
+
+    # async def storedata(self):
+    #     f = open("./data/listateam.txt", "w")
+    #     for word in self.TeamList:
+    #         stringa = str(word) + "\n"
+    #         f.write(stringa)
+    #         for parole in self.TeamList[word]:
+    #             stringa = str(parole) + "\n"
+    #             f.write(stringa)
+    #     f.close()
+
+    # async def getdata(self):
+    #     f = open("./data/listateam.txt", "r")
+    #     lista = f.read()
+    #     lista = lista.replace("\n", " ").split(" ")
+    #     currentteam = ""
+    #     listateam = {}
+    #     first = True
+    #     for word in lista:
+    #         if "Team" in word:
+    #             currentteam = word
+    #             first = True
+    #         else:
+    #             if first:
+    #                 listateam.update({str(currentteam): [str(word)]})
+    #                 first = False
+    #             else:
+    #                 listateam[str(currentteam)].append(str(word))
+    #     return listateam
 
     async def print_message(self):
         await self.stdout.send("i'm a timed notification")
@@ -66,7 +100,8 @@ class Bot(BotBase):
             self.guild = self.get_guild(842067271664926730)
             self.scheduler.start()
             self.stdout = self.get_channel(842067271664926733)
-
+            # self.scheduler.add_job(
+            #     self.storedata, CronTrigger(minute="0,15,30,45"))
             await self.stdout.send("Now online")
             # embed = Embed(title="Now online!",
             #               description="inconti let's ban ense", colour=0xFF0000)

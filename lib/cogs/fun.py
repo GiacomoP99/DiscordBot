@@ -3,17 +3,77 @@ from discord.ext.commands import command
 from random import randint
 from discord.utils import get
 from discord import Embed
-from discord import File
-from imgurpython import ImgurClient
 
 
 class Fun(Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.TeamList = self.getdata()
+
+    def storedata(self):
+        f = open("./data/listateam.txt", "w")
+        for word in self.TeamList:
+            stringa = str(word) + "\n"
+            f.write(stringa)
+            for parole in self.TeamList[word]:
+                stringa = str(parole) + "\n"
+                f.write(stringa)
+        f.close()
+
+    def getdata(self):
+        f = open("./data/listateam.txt", "r")
+        lista = f.read()
+        lista = lista.replace("\n", " ").split(" ")
+        currentteam = ""
+        listateam = {}
+        first = True
+        for word in lista:
+            if len(word) < 2:
+                continue
+            else:
+                if "team".upper() in word:
+                    currentteam = word
+                    first = True
+                else:
+                    if first:
+                        listateam.update({str(currentteam): [str(word)]})
+                        first = False
+                    else:
+                        listateam[str(currentteam)].append(str(word))
+        f.close()
+        return listateam
 
     @command(name="hello")
     async def say_hello(self, ctx):
+        print(self.TeamList)
         await ctx.send(f"Hello {ctx.author.mention}!")
+
+    @command(name="addme")
+    async def add_me(self, ctx):
+        sender = ctx.message.author
+        content = ctx.message.content.replace("!addme ", "")
+        self.TeamList[str(content).upper()].append(str(sender))
+        self.storedata()
+        await ctx.send("added with success!")
+
+    @command(name="createam")
+    async def crea_team(self, ctx):
+        sender = ctx.message.author
+        content = ctx.message.content.replace("!createam ", "")
+        self.TeamList.update({str(content).upper(): [str(sender)]})
+        self.storedata()
+        await ctx.send("added with success!")
+
+    @command(name="teamlist")
+    async def team_list(self, ctx):
+        res = ""
+        for word in self.TeamList:
+            stringa = str(word).upper() + "\n"
+            await ctx.send(stringa)
+            for parole in self.TeamList[word]:
+                res += str(parole) + ", "
+            await ctx.send(res)
+            res = ""
 
     @command(name="flame")
     async def flame_marco(self, ctx):
